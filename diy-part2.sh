@@ -25,7 +25,7 @@ sed -i 's/192.168.1.1/192.168.16.10/g' package/base-files/files/bin/config_gener
 # Add luci-app-amlogic
 # svn co https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/luci-app-amlogic
 # echo 'src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2' >>feeds.conf.default
-echo 'src-git istore https://github.com/linkease/istore' >>feeds.conf.default
+# echo 'src-git istore https://github.com/linkease/istore' >>feeds.conf.default
 
 
 # Apply patch
