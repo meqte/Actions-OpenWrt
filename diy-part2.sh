@@ -26,7 +26,7 @@
 # svn co https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/luci-app-amlogic
 # echo 'src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2' >>feeds.conf.default
 # echo 'src-git istore https://github.com/linkease/istore' >>feeds.conf.default
-echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
+# echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
 
 
 
