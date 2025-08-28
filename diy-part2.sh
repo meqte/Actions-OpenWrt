@@ -27,7 +27,7 @@ sed -i 's/192.168.1.1/192.168.16.10/g' package/base-files/files/bin/config_gener
 # echo 'src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2' >>feeds.conf.default
 # echo 'src-git istore https://github.com/linkease/istore' >>feeds.conf.default
 # echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
-echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
+# echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
 
 # Apply patch
 # git apply ../config/patches/{0001*,0002*}.patch --directory=feeds/luci
