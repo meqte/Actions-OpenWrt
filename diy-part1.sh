@@ -19,4 +19,4 @@
 # echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
 echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
 echo 'src-git netspeedtest https://github.com/sirpdboy/luci-app-netspeedtest;js' >> feeds.conf.default
-echo 'src-git OpenAppFilter https://github.com/destan19/OpenAppFilter;master' >> feeds.conf.default
+# echo 'src-git OpenAppFilter https://github.com/destan19/OpenAppFilter;master' >> feeds.conf.default
