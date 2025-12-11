@@ -1,39 +1,68 @@
-**English** | [中文](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
+# Actions-OpenWrt（meqte 分支）项目分析
+该项目是基于 GitHub Actions 实现 OpenWrt 固件自动化编译的模板仓库，衍生自 P3TERX/Actions-OpenWrt 项目（当前分支比原项目 main 分支超前 55 次提交），核心目标是降低 OpenWrt 固件编译门槛，让用户无需本地搭建复杂环境，即可通过 GitHub 平台自动生成定制化固件。
 
-# Actions-OpenWrt
 
-[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
-![GitHub Stars](https://img.shields.io/github/stars/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Stars&logo=github)
-![GitHub Forks](https://img.shields.io/github/forks/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Forks&logo=github)
+## 一、项目核心构成
+从仓库文件结构来看，核心文件围绕“配置定义”和“自动化流程”两大维度设计，关键文件及作用如下：
 
-A template for building OpenWrt with GitHub Actions
+| 文件名/目录               | 核心作用                                                                 |
+|---------------------------|--------------------------------------------------------------------------|
+| `.github/workflows/`      | 存放 GitHub Actions 工作流配置文件（如 `openwrt-bianyi.yml`），定义编译触发条件、步骤和环境 |
+| `.config`                 | OpenWrt 固件的核心配置文件，包含固件架构、内核版本、预装软件包等关键参数（已更新至最新状态） |
+| `.config--原始-不含Istore` | 不含 `Istore`（OpenWrt 应用商店）的原始配置文件，供不需要应用商店的用户直接使用       |
+| `.config-istore`          | 包含 `Istore` 的配置文件，适合需要便捷安装第三方软件的用户                         |
+| `diy-part1.sh`/`diy-part2.sh` | 自定义脚本，用于编译前的个性化操作（如添加自定义软件源、修改固件信息、集成私有插件等）   |
+| `README.md`               | 项目说明文档，指导用户使用流程和注意事项（当前提交记录标记为“🕊️”，可能为占位或更新标记） |
+| `LICENSE`                 | 遵循 MIT 协议，允许用户自由使用、修改和二次分发，仅需保留原作者版权声明               |
 
-## Usage
 
-- Click the [Use this template](https://github.com/P3TERX/Actions-OpenWrt/generate) button to create a new repository.
-- Generate `.config` files using [Lean's OpenWrt](https://github.com/coolsnowwolf/lede) source code. ( You can change it through environment variables in the workflow file. )
-- Push `.config` file to the GitHub repository.
-- Select `Build OpenWrt` on the Actions page.
-- Click the `Run workflow` button.
-- When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
+## 二、核心功能与使用流程
+### 1. 核心功能
+- **自动化编译**：依托 GitHub Actions 云环境，无需本地安装编译工具链，自动完成 OpenWrt 源码拉取、依赖安装、配置加载和固件生成。
+- **多配置支持**：提供“含 Istore”“不含 Istore”“默认”三种 `.config` 模板，覆盖不同用户需求（如新手需应用商店、进阶用户需精简固件）。
+- **自定义扩展**：通过 `diy-part1.sh` 和 `diy-part2.sh` 脚本，支持用户添加自定义逻辑（例如集成特定插件、修改固件名称、调整系统参数等）。
+- **产物便捷获取**：编译完成后，固件以 GitHub Artifacts（产物）形式存储，用户可直接下载，无需处理复杂的编译输出目录。
 
-## Tips
+### 2. 标准使用流程
+1. **创建仓库**：点击 GitHub 仓库页面的“Use this template”按钮，基于该项目生成个人仓库（继承所有配置和脚本）。
+2. **配置固件**：
+   - 直接使用仓库中的 `.config` 模板（根据是否需要 Istore 选择对应文件，并重命名为 `.config`）；
+   - 或通过 Lean（coolsnowwolf/lede）的 OpenWrt 源码生成自定义 `.config`（支持通过工作流环境变量修改配置）。
+3. **推送配置**：将最终确认的 `.config` 文件推送到个人 GitHub 仓库。
+4. **触发编译**：进入仓库的“Actions”页面，选择“Build OpenWrt”工作流，点击“Run workflow”按钮启动编译。
+5. **下载固件**：编译完成后（需等待一段时间，取决于配置复杂度），在 Actions 任务页面右上角点击“Artifacts”，下载生成的固件压缩包。
 
-- It may take a long time to create a `.config` file and build the OpenWrt firmware. Thus, before create repository to build your own firmware, you may check out if others have already built it which meet your needs by simply [search `Actions-Openwrt` in GitHub](https://github.com/search?q=Actions-openwrt).
-- Add some meta info of your built firmware (such as firmware architecture and installed packages) to your repository introduction, this will save others' time.
 
-## Credits
+## 三、项目优势与注意事项
+### 1. 核心优势
+- **低门槛**：无需本地搭建 Linux 编译环境、无需手动处理依赖冲突，新手可快速上手。
+- **高灵活**：支持通过配置文件和自定义脚本调整固件功能，满足不同设备（如路由器、旁路由）和场景需求。
+- **社区友好**：提供配置模板和清晰流程，且鼓励用户在仓库介绍中添加固件元信息（如架构、预装包），方便他人复用，减少重复编译。
+- **稳定依赖**：基于成熟的开源生态（Microsoft Azure 云环境、OpenWrt 官方源码、Lean 分支源码），编译流程稳定性有保障。
 
-- [Microsoft Azure](https://azure.microsoft.com)
-- [GitHub Actions](https://github.com/features/actions)
-- [OpenWrt](https://github.com/openwrt/openwrt)
-- [coolsnowwolf/lede](https://github.com/coolsnowwolf/lede)
-- [Mikubill/transfer](https://github.com/Mikubill/transfer)
-- [softprops/action-gh-release](https://github.com/softprops/action-gh-release)
-- [Mattraks/delete-workflow-runs](https://github.com/Mattraks/delete-workflow-runs)
-- [dev-drprasad/delete-older-releases](https://github.com/dev-drprasad/delete-older-releases)
-- [peter-evans/repository-dispatch](https://github.com/peter-evans/repository-dispatch)
+### 2. 注意事项
+- **编译耗时**：OpenWrt 固件编译（尤其是包含大量插件时）可能需要 1-4 小时，需耐心等待，避免频繁中断工作流。
+- **配置正确性**：`.config` 文件需与目标设备架构匹配（如 ARM、x86），否则可能生成无效固件，建议参考设备官方文档或社区成熟配置。
+- **资源限制**：GitHub Actions 免费账号有一定的运行时长限制（每月约 2000 分钟），频繁编译可能消耗额度，需合理规划。
+- **版本兼容性**：仓库分支比原项目超前 55 次提交，需注意自定义脚本或配置是否与最新代码兼容，避免编译报错。
 
-## License
 
-[MIT](https://github.com/P3TERX/Actions-OpenWrt/blob/main/LICENSE) © [**P3TERX**](https://p3terx.com)
+## 四、依赖与许可证
+### 1. 关键依赖项目
+- **基础环境**：Microsoft Azure（GitHub Actions 底层云服务）
+- **核心源码**：OpenWrt 官方源码、coolsnowwolf/lede（Lean 分支，国内用户常用的增强版源码）
+- **工具脚本**：Mikubill/transfer（文件传输工具）、softprops/action-gh-release（Release 发布工具）、Mattraks/delete-workflow-runs（工作流清理工具）等，用于优化编译流程和产物管理。
+
+### 2. 许可证
+遵循 **MIT 许可证**（原作者 P3TERX），允许：
+- 免费用于个人/商业用途；
+- 修改代码并二次分发；
+- 无需公开修改后的源码（但需保留原作者版权声明）。
+
+
+## 五、适用人群
+- **OpenWrt 新手**：无需学习本地编译流程，通过模板快速生成可用固件；
+- **路由器玩家**：需要为特定设备（如小米、斐讯路由器）定制固件，集成插件（如科学上网、广告过滤、网络共享）；
+- **开发者/极客**：通过自定义脚本扩展固件功能，或基于该项目二次开发自动化编译流程。
+
+总体而言，该项目是 OpenWrt 固件编译的“工具化解决方案”，大幅降低了定制化固件的技术门槛，同时保留了足够的灵活性，适合不同层次用户使用。
